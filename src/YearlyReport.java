@@ -2,31 +2,37 @@ import java.util.HashMap;
 public class YearlyReport {
     public HashMap<Integer, YearStatistic> monthsData;
     Read read = new Read();
+
     public YearlyReport() {
         monthsData = new HashMap<>();
     }
 
     public void loadFile(String path) {
-        String content = read.readFileContentsOrNull(path); // Считывание файла
+        if (monthsData.isEmpty()) {
+            String content = read.readFileContentsOrNull(path);
             System.out.println("Годовой отчет считан.");
-        String[] lines = content.split("\r?\n"); // массив строк
-        for (int i = 1; i < lines.length; i++) {
-            String line = lines[i]; // строка-01,350000,true
-            String[] parts = line.split(","); // 01,350000,true -> ["01", "350000", "true"]
-            int month = Integer.parseInt(parts[0]);
-            int amount = Integer.parseInt(parts[1]);
-            boolean isExpense = Boolean.parseBoolean(parts[2]);
-            if (!monthsData.containsKey(month)) {
-                monthsData.put(month, new YearStatistic(month));
+            String[] lines = content.split("\r?\n"); // массив строк
+            for (int i = 1; i < lines.length; i++) {
+                String line = lines[i]; // строка-01,350000,true
+                String[] parts = line.split(","); // 01,350000,true -> ["01", "350000", "true"]
+                int month = Integer.parseInt(parts[0]);
+                int amount = Integer.parseInt(parts[1]);
+                boolean isExpense = Boolean.parseBoolean(parts[2]);
+                if (!monthsData.containsKey(month)) {
+                    monthsData.put(month, new YearStatistic(month));
+                }
+                YearStatistic oneMonthData = monthsData.get(month);
+                if (isExpense) {
+                    oneMonthData.expenses += amount;
+                } else {
+                    oneMonthData.income += amount;
+                }
             }
-            YearStatistic oneMonthData = monthsData.get(month);
-            if (isExpense) {
-                oneMonthData.expenses += amount;
-            } else {
-                oneMonthData.income += amount;
-            }
+        } else {
+            System.out.println("Годовой отчет был считан ранее, выберете другое действие из меню.");
         }
     }
+
 
     public void printYearlyReport() { // Вывод по году
         if (!monthsData.isEmpty()) {

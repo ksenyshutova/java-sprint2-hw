@@ -18,7 +18,7 @@ public class Main {
                     break;
 
                 case 2: // Второй пункт-считывание годового отчета
-                    yearlyReport.loadFile("resources/y.2021.csv");
+                        yearlyReport.loadFile("resources/y.2021.csv");
                     break;
 
                 case 3: //Третий пункт- сверка отчетов
